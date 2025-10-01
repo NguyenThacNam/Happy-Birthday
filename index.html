@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng Sinh Nhật! 🎉</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff6b9d;
+            --secondary: #feca57;
+            --accent: #48dbfb;
+            --dark: #2d3436;
+            --light: #fff;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--light);
+        }
+
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') repeat-x;
+            z-index: -1;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        #typed-text {
+            font-size: 2rem;
+            min-height: 60px;
+        }
+
+        .balloon {
+            position: absolute;
+            font-size: 3rem;
+            animation: rise 6s ease-in-out infinite;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+            }
+
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+            }
+        }
+
+        /* Music Controls */
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s;
+            font-size: 1.5rem;
+        }
+
+        .music-control:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Gallery Section */
+        .gallery {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .gallery h2 {
+            font-family: 'Pacifico', cursive;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .photo-card {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+            cursor: pointer;
+            aspect-ratio: 1;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+
+        }
+
+        .photo-card:hover {
+            transform: translateY(-10px) scale(1.05);
+        }
+
+        .photo-card::after {
+            content: attr(data-caption);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .photo-card:hover::after {
+            opacity: 1;
+        }
+
+        /* Timeline Section */
+        .timeline {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline h2 {
+            font-family: 'Pacifico', cursive;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .timeline-container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.5s;
+        }
+
+        .timeline-item.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+            transform: translateX(50px);
+        }
+
+        .timeline-date {
+            min-width: 120px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--secondary);
+        }
+
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 0 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Game Section */
+        .game {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .game h2 {
+            font-family: 'Pacifico', cursive;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .memory-game {
+            display: grid;
+            grid-template-columns: repeat(5, 120px);
+            /* 5 cột */
+            grid-template-rows: repeat(2, 120px);
+            /* 2 hàng */
+            gap: 15px;
+        }
+
+
+        /* .card {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card.matched {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            backface-visibility: hidden;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        } */
+        .card {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: transform 0.6s;
+            position: relative;
+            transform-style: preserve-3d;
+            /* thêm dòng này */
+            perspective: 1000px;
+            /* thêm dòng này */
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+            backface-visibility: hidden;
+            font-size: 3rem;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+            /* khi lật thì show mặt sau */
+        }
+
+
+        /* Secret Letter Section */
+        .secret {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .secret h2 {
+            font-family: 'Pacifico', cursive;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .envelope {
+            width: 400px;
+            height: 300px;
+            background: #f4e7d7;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .envelope:hover {
+            transform: scale(1.05);
+        }
+
+        .envelope::before {
+            content: '💌';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+        }
+
+        .letter {
+            max-width: 600px;
+            background: #fff;
+            color: #333;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: none;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+        }
+
+        .letter.show {
+            display: block;
+            animation: unfold 0.8s ease-out;
+        }
+
+        @keyframes unfold {
+            0% {
+                transform: scale(0.1) rotate(-10deg);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1) rotate(0);
+                opacity: 1;
+            }
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 2rem;
+            transition: all 0.3s;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Easter Egg */
+        .easter-egg {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            animation: bounce 2s infinite;
+            z-index: 1000;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            #typed-text {
+                font-size: 1.5rem;
+            }
+
+            .memory-game {
+                grid-template-columns: repeat(4, 80px);
+            }
+
+            .card {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+
+            .envelope {
+                width: 300px;
+                height: 225px;
+            }
+
+            .memory-game {
+                grid-template-columns: repeat(5, 80px);
+                grid-template-rows: repeat(2, 80px);
+                gap: 10px;
+            }
+
+            .card {
+                width: 80px;
+                height: 80px;
+                font-size: 1.6rem;
+                /* emoji vẫn to dễ nhìn */
+            }
+
+            .popup-content {
+                width: 95%;
+                max-width: 350px;
+            }
+        }
+
+        /* Popup */
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            color: #333;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: zoomIn 0.4s ease;
+        }
+
+        /* .popup-content img {
+            max-width: 100%;
+            margin-top: 1rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        } */
+        .popup-content img {
+    max-width: 100%;
+    max-height: 300px; /* Giới hạn chiều cao */
+    object-fit: cover; /* Giữ bố cục gọn */
+    margin-top: 1rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .close-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin-top: 1rem;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .close-btn:hover {
+            background: var(--secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="parallax-bg"></div>
+
+    <!-- Music Control -->
+    <div class="music-control" onclick="toggleMusic()" title="Bật/tắt nhạc">
+        🎵
+    </div>
+    <audio id="bgMusic"  autoplay loop>
+        <source src="./audio/hpbd.mp3" type="audio/wav">
+    </audio>
+
+    <!-- Floating Balloons -->
+    <div class="balloon" style="left: 10%; animation-delay: 0s;">🎈</div>
+    <div class="balloon" style="left: 30%; animation-delay: 2s;">🎈</div>
+    <div class="balloon" style="left: 50%; animation-delay: 4s;">🎈</div>
+    <div class="balloon" style="left: 70%; animation-delay: 1s;">🎈</div>
+    <div class="balloon" style="left: 90%; animation-delay: 3s;">🎈</div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>🎉 Sinh Nhật Vui Vẻ! 🎉</h1>
+        <div id="typed-text"></div>
+        <button class="btn" onclick="scrollToNext()">Khám Phá Tiếp →</button>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery">
+        <h2>📸 Kỷ Niệm Đáng Nhớ Từ 2024</h2>
+        <div class="photo-grid">
+            <div class="photo-card" data-caption="Đéo có tấm ảnh chung nào cơ mà 🙃"
+                style="background-image:url('./img/chucotamnao.jpg'); background-size:cover; background-position:center;"
+                onclick="showMessage('Nể luôn')"></div>
+            <div class="photo-card" data-caption="Đi đớp nhiều vcl 😄"
+                style="background-image:url('./img/didoplientuc.jpg'); background-size:cover; background-position:center;"
+                onclick="showMessage('Đớp liên tục')"></div>
+            <div class="photo-card" data-caption="Tiệc sinh nhật năm ngoái 🎂"
+                style="background-image:url('./img/sinhnhatnamngoai.jpg'); background-size:cover; background-position:center;"
+                onclick="showMessage('Nhanh phết nhỉ')"></div>
+            <div class="photo-card" data-caption="Cafe cùng nhau ☕"
+                style="background-image:url('./img/cafe.jpg'); background-size:cover; background-position:center;"
+                onclick="showMessage('Ăn rồi đi nói sự thật mà')"></div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline">
+        <h2>⏰ Hành Trình Quen Biết</h2>
+        <div class="timeline-container">
+            <div class="timeline-item">
+                <div class="timeline-date">2009 - 2025</div>
+                <div class="timeline-content">
+                    <h3>Nhớ là học cùng từ lớp 1 thì phải 🤡</h3>
+                    <p>Gặp nhau là cái duyên ở lại với nhau là cái nghiệp🐧</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">2022</div>
+                <div class="timeline-content">
+                    <h3>Hay lượn lờ bốc phét cùng nhau 🙃</h3>
+                    <p>Cùng nhau là 2 chú ngựa chúa rong ruổi khắp nơi 🐴</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">2023</div>
+                <div class="timeline-content">
+                    <h3>Đi lên Ba Vì ngắm hoa dã quỳ 🌼</h3>
+                    <p>Tiếp tục câu chuyện đi lượn lờ 🕊️ </p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">2024</div>
+                <div class="timeline-content">
+                    <h3>Không đi xa nhưng mà đi gần thì nhó nhói 🤣</h3>
+                    <p>Bắt đầu với công cuộc nhập môn về sự huyền bí của vũ trụ 🤯</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">12 - 10 - 2025</div>
+                <div class="timeline-content">
+                    <h3>Hôm Nay - Sinh Nhật Của Bạn Tôi 🎉</h3>
+                    <p>Một tuổi mới tuyệt vời đang chờ đợi. Chúc m luôn hạnh phúc! 🎂</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Section -->
+    <section class="game">
+        <h2>🎮 Chơi Một Trò Nào!</h2>
+        <h4>Chơi vui có thưởng 😎</h4>
+        <br>
+        <p style="margin-bottom: 1rem;">Tìm các cặp biểu tượng giống nhau</p>
+        <div class="memory-game" id="memoryGame"></div>
+        <p id="gameResult" style="margin-top: 1rem; font-size: 1.5rem;"></p>
+    </section>
+
+    <!-- Secret Letter Section -->
+  <section class="secret">
+  <h2>💌 Thư Tay Bí Mật</h2>
+  <div class="envelope" id="envelope" onclick="openLetter()"></div>
+  <div class="letter" id="letter">
+      <h3 style="text-align: center; color: var(--primary); font-family: 'Pacifico', cursive;">
+          Gửi Người Bạn Thân “Bu l” 🤣
+      </h3>
+      <br>
+      <p>Hôm nay là ngày đặc biệt của bạn và cũng là ngày t được dịp ăn ké tý  😏🎂.</p>
+      <p>Kỷ niệm thì nhiều, nhưng nhớ nhất vẫn đéo có tấm ảnh chung nào 🙄.</p>
+      <p>Chúc bạn t tuổi mới: tiền vào như nước, jon thì liên tục đâm vào mặt, hạnh phúc thì luôn luôn tự tìm tới 🥳.</p>
+      <p>Và quan trọng nhất: nhớ bao t đi bơi hia thường xuyên hơn  😎.</p>
+
+      <br>
+      <p style="text-align: right; font-style: italic;">
+          Bạn thân "số mấy thì k rõ" của bạn 🤔<br> 
+          (Người luôn đòi quà không biết ngại 🤤)
+      </p>
+  </div>
+</section>
+
+    <!-- Easter Egg -->
+    <div class="easter-egg" onclick="secretSurprise()" title="Click mình đi! 🎁">
+        🎁
+    </div>
+
+    <script>
+        // Typed.js effect
+        document.addEventListener('DOMContentLoaded', function () {
+            const typed = new Typed('#typed-text', {
+                strings: [
+                    'Chúc mừng sinh nhật bạn tôi ! 🎂',
+                    'Một tuổi mới tuyệt vời đang chờ đón  ! 🌟',
+                    'Hãy luôn giữ nụ cười và hạnh phúc ! 😊'
+                ],
+                typeSpeed: 50,
+                backSpeed: 30,
+                backDelay: 2000,
+                loop: true,
+                onComplete: () => {
+                    launchConfetti();
+                }
+            });
+
+            // Launch confetti after first message
+            setTimeout(launchConfetti, 3000);
+
+            // Initialize timeline animation
+            observeTimeline();
+
+            // Initialize memory game
+            initMemoryGame();
+        });
+
+        // Confetti effect
+        function launchConfetti() {
+            const duration = 2000;
+            const end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff6b9d', '#feca57', '#48dbfb']
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ff6b9d', '#feca57', '#48dbfb']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        }
+
+        // Music toggle
+        let musicPlaying = false;
+        function toggleMusic() {
+            const music = document.getElementById('bgMusic');
+            if (musicPlaying) {
+                music.pause();
+                musicPlaying = false;
+            } else {
+                music.play();
+                musicPlaying = true;
+            }
+        }
+
+        // Scroll to next section
+        function scrollToNext() {
+            window.scrollTo({
+                top: window.innerHeight,
+                behavior: 'smooth'
+            });
+        }
+
+        // Photo message
+        function showMessage(msg) {
+            alert(msg);
+        }
+
+        // Timeline animation on scroll
+        function observeTimeline() {
+            const items = document.querySelectorAll('.timeline-item');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('show');
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            items.forEach(item => observer.observe(item));
+        }
+
+        // Memory Game
+        // Memory Game
+        // Memory Game
+        const emojis = ['🎂', '🎈', '🎁', '🎉', '🍰']; // chỉ 5 emoji
+        let cards = [...emojis, ...emojis]; // 10 thẻ
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        function initMemoryGame() {
+            cards.sort(() => Math.random() - 0.5);
+            const gameContainer = document.getElementById('memoryGame');
+            gameContainer.innerHTML = '';
+            matchedPairs = 0;
+            flippedCards = [];
+
+            cards.forEach((emoji, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.dataset.emoji = emoji;
+                card.dataset.index = index;
+                card.innerHTML = `
+            <div class="card-front">❓</div>
+            <div class="card-back">${emoji}</div>
+        `;
+                card.onclick = () => flipCard(card);
+                gameContainer.appendChild(card);
+            });
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            if (card1.dataset.emoji === card2.dataset.emoji) {
+                card1.classList.add('matched');
+                card2.classList.add('matched');
+                matchedPairs++;
+
+                if (matchedPairs === emojis.length) {
+                    setTimeout(() => {
+                        document.getElementById('giftPopup').style.display = 'flex';
+                        launchConfetti();
+                    }, 300);
+                }
+            } else {
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                }, 500); // chỉ 0.3s thôi
+            }
+            flippedCards = [];
+        }
+
+        function flipCard(card) {
+            if (flippedCards.length === 2 || card.classList.contains('flipped') || card.classList.contains('matched')) {
+                return;
+            }
+
+            card.classList.add('flipped');
+            flippedCards.push(card);
+
+            if (flippedCards.length === 2) {
+                checkMatch(); // không delay 1s nữa
+            }
+        }
+        function openGift() {
+            document.getElementById('giftResult').innerHTML = `
+        <img src="./img/qua.jpg" alt="Món quà" />
+        <p> Hơ hơ còn đòi quà nữa ? M nhìn mặt t xem có ko mà đòi ?? . Lướt xuống tiếp đê </p>
+    `;
+            launchConfetti();
+        }
+
+        function closePopup() {
+            document.getElementById('giftPopup').style.display = 'none';
+            initMemoryGame(); // reset game nếu muốn
+        }
+        // Open secret letter
+        function openLetter() {
+            document.getElementById('envelope').style.display = 'none';
+            document.getElementById('letter').classList.add('show');
+            launchConfetti();
+        }
+
+        // Easter egg surprise
+        function secretSurprise() {
+            alert('🎊 Bạn đã tìm ra Easter Egg! 🎊\n\nMột điều ước đặc biệt:\nMong rằng tất cả ước mơ của bạn đều thành hiện thực!\n\n✨ Keep shining! ✨');
+            launchConfetti();
+        }
+
+        // Parallax effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.parallax-bg');
+            parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+        });
+    </script>
+    <!-- Popup -->
+    <div class="popup" id="giftPopup">
+        <div class="popup-content">
+            <h2>🎉 Mở quà đi cu! 🎉</h2>
+            <button class="btn" onclick="openGift()">Mở Quà 🎁</button>
+            <div id="giftResult" style="margin-top:1rem;"></div>
+            <button class="close-btn" onclick="closePopup()">Đóng ✖</button>
+        </div>
+    </div>
+
+</body>
+
+</html>

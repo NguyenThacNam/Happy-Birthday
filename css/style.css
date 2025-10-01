@@ -1,0 +1,142 @@
+/* Reset cơ bản */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Font chung */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #fdfdfd;
+  color: #333;
+}
+
+/* Thanh điều hướng */
+nav {
+  background-color: #ffcc00;
+  padding: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+nav ul li {
+  margin: 0 10px;
+}
+nav ul li a, nav ul li button {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+nav ul li a:hover, nav ul li button:hover {
+  color: #0066cc;
+}
+
+/* Tiêu đề trang */
+.title {
+  text-align: center;
+  margin: 20px 0;
+  font-family: 'Dancing Script', cursive;
+  color: #660000;
+  font-size: 2em;
+}
+
+/* Intro page (Trang chủ) */
+.intro {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.intro h1 {
+  font-size: 3em;
+  color: #cc0000;
+}
+
+/* Parallax section (dùng background-attachment) */
+.parallax {
+  position: relative;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.parallax .overlay {
+  background: rgba(0,0,0,0.3);
+  padding: 20px;
+  border-radius: 10px;
+}
+.parallax h2 {
+  color: #fff;
+  font-size: 2em;
+}
+
+/* Gallery ảnh */
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+}
+.gallery a {
+  margin: 10px;
+}
+.gallery img {
+  max-width: 200px;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  border-radius: 5px;
+  transition: transform 0.3s;
+}
+.gallery img:hover {
+  transform: scale(1.05);
+}
+
+/* Thư tay viết bằng font handwriting */
+.letter {
+  margin: 20px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.2em;
+  opacity: 0;
+}
+.fade-in {
+  animation: fadeIn 2s forwards;
+}
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* Video khung */
+.video-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+
+/* Mini game container */
+#game-container {
+  padding: 20px;
+  text-align: center;
+  border: 2px dashed #ccc;
+  margin: 20px;
+}
+
+/* Footer (nếu cần) */
+footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 0.9em;
+  color: #666;
+}
